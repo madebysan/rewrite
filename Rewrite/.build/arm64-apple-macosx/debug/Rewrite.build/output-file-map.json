@@ -1,0 +1,68 @@
+{
+  "": {
+    "swift-dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/master.swiftdeps"
+  },
+  "/Users/san/Projects/rewrite/Rewrite/Sources/Rewrite/App.swift": {
+    "dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/App.d",
+    "object": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/App.swift.o",
+    "swiftmodule": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/App~partial.swiftmodule",
+    "swift-dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/App.swiftdeps",
+    "diagnostics": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/App.dia"
+  },
+  "/Users/san/Projects/rewrite/Rewrite/Sources/Rewrite/AppDelegate.swift": {
+    "dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/AppDelegate.d",
+    "object": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/AppDelegate.swift.o",
+    "swiftmodule": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/AppDelegate~partial.swiftmodule",
+    "swift-dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/AppDelegate.swiftdeps",
+    "diagnostics": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/AppDelegate.dia"
+  },
+  "/Users/san/Projects/rewrite/Rewrite/Sources/Rewrite/ClaudeAPI.swift": {
+    "dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/ClaudeAPI.d",
+    "object": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/ClaudeAPI.swift.o",
+    "swiftmodule": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/ClaudeAPI~partial.swiftmodule",
+    "swift-dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/ClaudeAPI.swiftdeps",
+    "diagnostics": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/ClaudeAPI.dia"
+  },
+  "/Users/san/Projects/rewrite/Rewrite/Sources/Rewrite/HotkeyManager.swift": {
+    "dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/HotkeyManager.d",
+    "object": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/HotkeyManager.swift.o",
+    "swiftmodule": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/HotkeyManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/HotkeyManager.swiftdeps",
+    "diagnostics": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/HotkeyManager.dia"
+  },
+  "/Users/san/Projects/rewrite/Rewrite/Sources/Rewrite/OnboardingWindow.swift": {
+    "dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/OnboardingWindow.d",
+    "object": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/OnboardingWindow.swift.o",
+    "swiftmodule": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/OnboardingWindow~partial.swiftmodule",
+    "swift-dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/OnboardingWindow.swiftdeps",
+    "diagnostics": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/OnboardingWindow.dia"
+  },
+  "/Users/san/Projects/rewrite/Rewrite/Sources/Rewrite/SettingsWindow.swift": {
+    "dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/SettingsWindow.d",
+    "object": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/SettingsWindow.swift.o",
+    "swiftmodule": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/SettingsWindow~partial.swiftmodule",
+    "swift-dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/SettingsWindow.swiftdeps",
+    "diagnostics": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/SettingsWindow.dia"
+  },
+  "/Users/san/Projects/rewrite/Rewrite/Sources/Rewrite/StatusBarController.swift": {
+    "dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/StatusBarController.d",
+    "object": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/StatusBarController.swift.o",
+    "swiftmodule": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/StatusBarController~partial.swiftmodule",
+    "swift-dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/StatusBarController.swiftdeps",
+    "diagnostics": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/StatusBarController.dia"
+  },
+  "/Users/san/Projects/rewrite/Rewrite/Sources/Rewrite/TextGrabber.swift": {
+    "dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/TextGrabber.d",
+    "object": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/TextGrabber.swift.o",
+    "swiftmodule": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/TextGrabber~partial.swiftmodule",
+    "swift-dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/TextGrabber.swiftdeps",
+    "diagnostics": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/TextGrabber.dia"
+  },
+  "/Users/san/Projects/rewrite/Rewrite/Sources/Rewrite/UserSettings.swift": {
+    "dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/UserSettings.d",
+    "object": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/UserSettings.swift.o",
+    "swiftmodule": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/UserSettings~partial.swiftmodule",
+    "swift-dependencies": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/UserSettings.swiftdeps",
+    "diagnostics": "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/Rewrite.build/UserSettings.dia"
+  }
+}

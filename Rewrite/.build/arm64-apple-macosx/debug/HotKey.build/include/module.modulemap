@@ -1,0 +1,3 @@
+module HotKey {
+    header "/Users/san/Projects/rewrite/Rewrite/.build/arm64-apple-macosx/debug/HotKey.build/include/HotKey-Swift.h"
+}
