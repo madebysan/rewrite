@@ -11,6 +11,7 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
     private var promptField: NSTextView!
     private var launchAtLoginCheckbox: NSButton!
     private var shortcutLabel: NSTextField!
+    private var shortcutMonitor: Any?
 
     convenience init() {
         let window = NSWindow(
@@ -182,11 +183,17 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
     }
 
     @objc private func recordShortcut() {
+        // Remove any existing monitor before adding a new one
+        if let monitor = shortcutMonitor {
+            NSEvent.removeMonitor(monitor)
+            shortcutMonitor = nil
+        }
+
         shortcutLabel.stringValue = "Press shortcut..."
         shortcutLabel.textColor = .systemOrange
 
-        // Listen for the next key press
-        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+        // Listen for the next key press (one-shot)
+        shortcutMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
             guard let self else { return event }
 
             // Require at least one modifier
@@ -200,6 +207,11 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
             self.shortcutLabel.textColor = .labelColor
 
             // Remove this monitor (one-shot)
+            if let monitor = self.shortcutMonitor {
+                NSEvent.removeMonitor(monitor)
+                self.shortcutMonitor = nil
+            }
+
             return nil
         }
     }
@@ -272,6 +284,11 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
     }
 
     func windowWillClose(_ notification: Notification) {
+        // Clean up any active shortcut monitor
+        if let monitor = shortcutMonitor {
+            NSEvent.removeMonitor(monitor)
+            shortcutMonitor = nil
+        }
         // Save prompt when window closes
         UserSettings.shared.prompt = promptField.string
     }
