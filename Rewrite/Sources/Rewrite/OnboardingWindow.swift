@@ -1,6 +1,6 @@
 import AppKit
 
-// First-launch welcome screen with API key entry
+// First-launch welcome screen with API key entry and permissions guide
 final class OnboardingWindow: NSWindowController {
     private var apiKeyField: NSSecureTextField!
     private var getStartedButton: NSButton!
@@ -9,7 +9,7 @@ final class OnboardingWindow: NSWindowController {
 
     convenience init() {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 480, height: 400),
+            contentRect: NSRect(x: 0, y: 0, width: 500, height: 520),
             styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false
@@ -44,15 +44,43 @@ final class OnboardingWindow: NSWindowController {
 
         // Description
         let descLabel = NSTextField(wrappingLabelWithString:
-            "Rewrite fixes grammar and spelling in any selected text on your Mac.\n\n" +
-            "Select text anywhere, press Cmd+Shift+R, and the corrected text replaces your selection instantly.\n\n" +
-            "To get started, enter your Anthropic API key below."
+            "Fix grammar and spelling in any selected text with one keystroke.\n\n" +
+            "Select text anywhere, press Cmd+Shift+R, and the corrected text replaces your selection instantly."
         )
         descLabel.translatesAutoresizingMaskIntoConstraints = false
         descLabel.font = .systemFont(ofSize: 13)
         descLabel.alignment = .center
         descLabel.textColor = .secondaryLabelColor
         contentView.addSubview(descLabel)
+
+        // Permissions info box
+        let permBox = NSBox()
+        permBox.translatesAutoresizingMaskIntoConstraints = false
+        permBox.boxType = .custom
+        permBox.cornerRadius = 8
+        permBox.borderColor = .separatorColor
+        permBox.borderWidth = 1
+        permBox.fillColor = NSColor.controlBackgroundColor
+        permBox.titlePosition = .noTitle
+        contentView.addSubview(permBox)
+
+        let permLabel = NSTextField(wrappingLabelWithString:
+            "After setup, macOS will ask you to grant two permissions in System Settings → Privacy & Security:\n\n" +
+            "  1. Accessibility — so Rewrite can copy and paste text\n" +
+            "  2. Input Monitoring — so the global shortcut works everywhere\n\n" +
+            "Both are required. You may need to relaunch Rewrite after granting them."
+        )
+        permLabel.translatesAutoresizingMaskIntoConstraints = false
+        permLabel.font = .systemFont(ofSize: 11.5)
+        permLabel.textColor = .secondaryLabelColor
+        permBox.addSubview(permLabel)
+
+        // API key label
+        let apiLabel = NSTextField(labelWithString: "Anthropic API Key")
+        apiLabel.translatesAutoresizingMaskIntoConstraints = false
+        apiLabel.font = .systemFont(ofSize: 12, weight: .semibold)
+        apiLabel.textColor = .secondaryLabelColor
+        contentView.addSubview(apiLabel)
 
         // API key field
         apiKeyField = NSSecureTextField(frame: .zero)
@@ -89,19 +117,31 @@ final class OnboardingWindow: NSWindowController {
 
         NSLayoutConstraint.activate([
             iconView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            iconView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 40),
+            iconView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 32),
             iconView.widthAnchor.constraint(equalToConstant: 64),
             iconView.heightAnchor.constraint(equalToConstant: 64),
 
             titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: iconView.bottomAnchor, constant: 12),
+            titleLabel.topAnchor.constraint(equalTo: iconView.bottomAnchor, constant: 10),
 
             descLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            descLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
+            descLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             descLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
             descLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
 
-            apiKeyField.topAnchor.constraint(equalTo: descLabel.bottomAnchor, constant: 20),
+            permBox.topAnchor.constraint(equalTo: descLabel.bottomAnchor, constant: 16),
+            permBox.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 32),
+            permBox.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -32),
+
+            permLabel.topAnchor.constraint(equalTo: permBox.topAnchor, constant: 12),
+            permLabel.leadingAnchor.constraint(equalTo: permBox.leadingAnchor, constant: 14),
+            permLabel.trailingAnchor.constraint(equalTo: permBox.trailingAnchor, constant: -14),
+            permLabel.bottomAnchor.constraint(equalTo: permBox.bottomAnchor, constant: -12),
+
+            apiLabel.topAnchor.constraint(equalTo: permBox.bottomAnchor, constant: 18),
+            apiLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 60),
+
+            apiKeyField.topAnchor.constraint(equalTo: apiLabel.bottomAnchor, constant: 6),
             apiKeyField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 60),
             apiKeyField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -60),
 
@@ -115,7 +155,7 @@ final class OnboardingWindow: NSWindowController {
 
             getStartedButton.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 12),
             getStartedButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            getStartedButton.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -24),
+            getStartedButton.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -20),
         ])
     }
 

@@ -71,7 +71,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             contentView.addSubview(titleLabel)
 
             // Version
-            let versionLabel = NSTextField(labelWithString: "Version 1.0.0")
+            let versionLabel = NSTextField(labelWithString: "Version 1.1.0")
             versionLabel.translatesAutoresizingMaskIntoConstraints = false
             versionLabel.font = .systemFont(ofSize: 11)
             versionLabel.textColor = .secondaryLabelColor

@@ -1,6 +1,9 @@
 import AppKit
 import Carbon.HIToolbox
 import UserNotifications
+import os.log
+
+private let logger = Logger(subsystem: "com.santiagoalonso.rewrite", category: "TextGrabber")
 
 // Handles grabbing selected text via clipboard and pasting results back
 @MainActor
@@ -31,6 +34,7 @@ final class TextGrabber {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             // If changeCount didn't change, Cmd+C didn't copy anything
             guard pasteboard.changeCount != changeCountBefore else {
+                logger.notice("clipboard unchanged — no selection or missing permission")
                 self.restoreClipboard(pasteboard, items: savedItems)
                 return
             }
@@ -62,7 +66,7 @@ final class TextGrabber {
                         }
                     }
                 } catch {
-                    NSLog("Rewrite error: \(error.localizedDescription)")
+                    logger.error("rewrite failed: \(error.localizedDescription)")
                     await MainActor.run {
                         self.restoreClipboard(pasteboard, items: savedItems)
                         self.onStatusChange?(.error(error.localizedDescription))
