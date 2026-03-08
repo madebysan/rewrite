@@ -1,10 +1,13 @@
 import AppKit
+import UserNotifications
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusBarController: StatusBarController?
     private var onboardingWindow: OnboardingWindow?
     private var settingsWindow: SettingsWindow?
     private var aboutWindow: NSWindow?
+    private var permissionTimer: Timer?
+    private var wasPermissionsOK = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Check accessibility permission
@@ -16,6 +19,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Register global hotkey
         HotkeyManager.shared.register()
+
+        // Start periodic permission monitoring
+        wasPermissionsOK = AXIsProcessTrusted() && SettingsWindow.checkInputMonitoring()
+        startPermissionMonitoring()
 
         // Show onboarding if first launch
         if !UserSettings.shared.hasCompletedOnboarding {
@@ -71,7 +78,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             contentView.addSubview(titleLabel)
 
             // Version
-            let versionLabel = NSTextField(labelWithString: "Version 1.1.0")
+            let versionLabel = NSTextField(labelWithString: "Version 1.2.0")
             versionLabel.translatesAutoresizingMaskIntoConstraints = false
             versionLabel.font = .systemFont(ofSize: 11)
             versionLabel.textColor = .secondaryLabelColor
@@ -149,5 +156,47 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if !trusted {
             NSLog("Rewrite: Accessibility permission not granted. The app needs this to simulate Cmd+C/Cmd+V.")
         }
+    }
+
+    private func startPermissionMonitoring() {
+        permissionTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { [weak self] _ in
+            guard let self else { return }
+            let accessOK = AXIsProcessTrusted()
+            let inputOK = SettingsWindow.checkInputMonitoring()
+            let allOK = accessOK && inputOK
+
+            if self.wasPermissionsOK && !allOK {
+                // Permission was revoked
+                DispatchQueue.main.async {
+                    self.statusBarController?.showPermissionWarning(true)
+                }
+                self.showPermissionLostNotification(accessibility: !accessOK, inputMonitoring: !inputOK)
+            } else if !self.wasPermissionsOK && allOK {
+                // All permissions restored
+                DispatchQueue.main.async {
+                    self.statusBarController?.showPermissionWarning(false)
+                }
+            }
+
+            self.wasPermissionsOK = allOK
+        }
+    }
+
+    private func showPermissionLostNotification(accessibility: Bool, inputMonitoring: Bool) {
+        var missing: [String] = []
+        if accessibility { missing.append("Accessibility") }
+        if inputMonitoring { missing.append("Input Monitoring") }
+
+        let content = UNMutableNotificationContent()
+        content.title = "Rewrite shortcut stopped working"
+        content.body = "Missing permission: \(missing.joined(separator: " and ")). Open Rewrite settings or go to System Settings → Privacy & Security to fix."
+        content.sound = .default
+
+        let request = UNNotificationRequest(
+            identifier: "permission-lost",
+            content: content,
+            trigger: nil
+        )
+        UNUserNotificationCenter.current().add(request)
     }
 }

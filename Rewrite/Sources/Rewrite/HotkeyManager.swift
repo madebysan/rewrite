@@ -23,7 +23,7 @@ final class HotkeyManager {
 
         // Fall back to default: Cmd+Shift+R
         if hotKey == nil {
-            hotKey = HotKey(key: .r, modifiers: [.command, .shift])
+            hotKey = HotKey(key: .e, modifiers: [.command, .shift])
         }
 
         hotKey?.keyDownHandler = {
@@ -48,7 +48,7 @@ final class HotkeyManager {
     // Reset to default shortcut
     func resetToDefault() {
         hotKey = nil
-        hotKey = HotKey(key: .r, modifiers: [.command, .shift])
+        hotKey = HotKey(key: .e, modifiers: [.command, .shift])
         hotKey?.keyDownHandler = {
             TextGrabber.shared.grabRewriteAndPaste()
         }

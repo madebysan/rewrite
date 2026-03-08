@@ -6,6 +6,8 @@ final class StatusBarController {
     private var statusItem: NSStatusItem?
     private weak var appDelegate: AppDelegate?
     private var animationTimer: Timer?
+    private var statusMenuItem: NSMenuItem?
+    private var hasPermissionWarning = false
 
     init(appDelegate: AppDelegate) {
         self.appDelegate = appDelegate
@@ -20,10 +22,24 @@ final class StatusBarController {
 
         let menu = NSMenu()
 
-        // Show current shortcut in the menu
-        let shortcutItem = NSMenuItem(title: "Rewrite Selected Text", action: nil, keyEquivalent: "")
-        shortcutItem.isEnabled = false
-        menu.addItem(shortcutItem)
+        // Manual trigger — same as the keyboard shortcut
+        let rewriteItem = NSMenuItem(title: "Rewrite Selected Text", action: #selector(triggerRewrite), keyEquivalent: "")
+        rewriteItem.target = self
+        menu.addItem(rewriteItem)
+
+        menu.addItem(NSMenuItem.separator())
+
+        // Status indicator
+        let allPermissionsOK = AXIsProcessTrusted() && SettingsWindow.checkInputMonitoring()
+        let statusTitle = allPermissionsOK ? "Status: Ready" : "Status: Missing Permissions"
+        statusMenuItem = NSMenuItem(title: statusTitle, action: allPermissionsOK ? nil : #selector(AppDelegate.openSettings), keyEquivalent: "")
+        statusMenuItem?.target = allPermissionsOK ? nil : appDelegate
+        statusMenuItem?.isEnabled = !allPermissionsOK
+        if !allPermissionsOK {
+            statusMenuItem?.image = NSImage(systemSymbolName: "exclamationmark.triangle.fill", accessibilityDescription: "Warning")
+            statusMenuItem?.image?.isTemplate = true
+        }
+        menu.addItem(statusMenuItem!)
 
         menu.addItem(NSMenuItem.separator())
 
@@ -49,10 +65,44 @@ final class StatusBarController {
 
         statusItem?.menu = menu
 
+        // Show warning icon if permissions missing on launch
+        if !allPermissionsOK {
+            hasPermissionWarning = true
+            if let button = statusItem?.button {
+                setWarningIcon(button)
+            }
+        }
+
         // Listen for rewrite status changes
         TextGrabber.shared.onStatusChange = { [weak self] status in
             self?.handleStatus(status)
         }
+    }
+
+    func showPermissionWarning(_ show: Bool) {
+        hasPermissionWarning = show
+        guard let button = statusItem?.button else { return }
+
+        if show {
+            setWarningIcon(button)
+            statusMenuItem?.title = "Status: Missing Permissions"
+            statusMenuItem?.action = #selector(AppDelegate.openSettings)
+            statusMenuItem?.target = appDelegate
+            statusMenuItem?.isEnabled = true
+            statusMenuItem?.image = NSImage(systemSymbolName: "exclamationmark.triangle.fill", accessibilityDescription: "Warning")
+            statusMenuItem?.image?.isTemplate = true
+        } else {
+            setDefaultIcon(button)
+            statusMenuItem?.title = "Status: Ready"
+            statusMenuItem?.action = nil
+            statusMenuItem?.isEnabled = false
+            statusMenuItem?.image = nil
+        }
+    }
+
+
+    @objc private func triggerRewrite() {
+        TextGrabber.shared.grabRewriteAndPaste()
     }
 
     private func setDefaultIcon(_ button: NSStatusBarButton) {
@@ -61,6 +111,13 @@ final class StatusBarController {
             button.image = image
         } else {
             button.title = "R"
+        }
+    }
+
+    private func setWarningIcon(_ button: NSStatusBarButton) {
+        if let image = NSImage(systemSymbolName: "exclamationmark.triangle", accessibilityDescription: "Rewrite — missing permissions") {
+            image.isTemplate = true
+            button.image = image
         }
     }
 
@@ -104,6 +161,10 @@ final class StatusBarController {
     private func stopAnimation(_ button: NSStatusBarButton) {
         animationTimer?.invalidate()
         animationTimer = nil
-        setDefaultIcon(button)
+        if hasPermissionWarning {
+            setWarningIcon(button)
+        } else {
+            setDefaultIcon(button)
+        }
     }
 }

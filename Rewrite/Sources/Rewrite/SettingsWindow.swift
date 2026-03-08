@@ -15,7 +15,7 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
 
     convenience init() {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 500, height: 480),
+            contentRect: NSRect(x: 0, y: 0, width: 500, height: 600),
             styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false
@@ -124,7 +124,7 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
         shortcutContainer.orientation = .horizontal
         shortcutContainer.spacing = 8
 
-        shortcutLabel = NSTextField(labelWithString: "Cmd + Shift + R")
+        shortcutLabel = NSTextField(labelWithString: "Cmd + Shift + E")
         shortcutLabel.font = .monospacedSystemFont(ofSize: 13, weight: .medium)
         shortcutContainer.addArrangedSubview(shortcutLabel)
 
@@ -140,6 +140,40 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
 
         stackView.addArrangedSubview(shortcutContainer)
 
+        // --- Permissions ---
+        let permSeparator = NSBox()
+        permSeparator.boxType = .separator
+        stackView.addArrangedSubview(permSeparator)
+        permSeparator.widthAnchor.constraint(equalTo: stackView.widthAnchor).isActive = true
+
+        let permLabel = makeLabel("Permissions")
+        stackView.addArrangedSubview(permLabel)
+
+        let isAccessibilityGranted = AXIsProcessTrusted()
+        let isInputMonitoringGranted = Self.checkInputMonitoring()
+
+        // Accessibility row
+        let accessibilityRow = makePermissionRow(
+            granted: isAccessibilityGranted,
+            name: "Accessibility",
+            action: #selector(openAccessibilitySettings)
+        )
+        stackView.addArrangedSubview(accessibilityRow)
+
+        // Input Monitoring row
+        let inputMonitoringRow = makePermissionRow(
+            granted: isInputMonitoringGranted,
+            name: "Input Monitoring",
+            action: #selector(openInputMonitoringSettings)
+        )
+        stackView.addArrangedSubview(inputMonitoringRow)
+
+        let permHint = NSTextField(wrappingLabelWithString: "Both permissions are required. Accessibility lets Rewrite read selected text and paste corrections. Input Monitoring lets the keyboard shortcut work globally. If either stops working after an update, toggle Rewrite off and on in the relevant System Settings panel, then relaunch.")
+        permHint.font = .systemFont(ofSize: 11)
+        permHint.textColor = .tertiaryLabelColor
+        stackView.addArrangedSubview(permHint)
+        permHint.widthAnchor.constraint(equalTo: stackView.widthAnchor).isActive = true
+
         // --- Launch at Login ---
         let separator = NSBox()
         separator.boxType = .separator
@@ -149,6 +183,58 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
         launchAtLoginCheckbox = NSButton(checkboxWithTitle: "Launch at login", target: self, action: #selector(toggleLaunchAtLogin))
         launchAtLoginCheckbox.state = UserSettings.shared.launchAtLogin ? .on : .off
         stackView.addArrangedSubview(launchAtLoginCheckbox)
+    }
+
+    private func makePermissionRow(granted: Bool, name: String, action: Selector) -> NSStackView {
+        let row = NSStackView()
+        row.orientation = .horizontal
+        row.spacing = 6
+
+        let dot = NSTextField(labelWithString: "●")
+        dot.font = .systemFont(ofSize: 10)
+        dot.textColor = granted ? .systemGreen : .systemRed
+        row.addArrangedSubview(dot)
+
+        let label = NSTextField(labelWithString: granted
+            ? "\(name): Granted"
+            : "\(name): Not Granted")
+        label.font = .systemFont(ofSize: 12)
+        label.textColor = granted ? .labelColor : .systemRed
+        row.addArrangedSubview(label)
+
+        if !granted {
+            let fixButton = NSButton(title: "Open Settings", target: self, action: action)
+            fixButton.bezelStyle = .rounded
+            fixButton.controlSize = .small
+            row.addArrangedSubview(fixButton)
+        }
+
+        return row
+    }
+
+    static func checkInputMonitoring() -> Bool {
+        // Try to create a passive event tap — returns nil if Input Monitoring is not granted
+        let tap = CGEvent.tapCreate(
+            tap: .cghidEventTap,
+            place: .headInsertEventTap,
+            options: .listenOnly,
+            eventsOfInterest: CGEventMask(1 << CGEventType.keyDown.rawValue),
+            callback: { _, _, event, _ in Unmanaged.passUnretained(event) },
+            userInfo: nil
+        )
+        return tap != nil
+    }
+
+    @objc private func openAccessibilitySettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
+    @objc private func openInputMonitoringSettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ListenEvent") {
+            NSWorkspace.shared.open(url)
+        }
     }
 
     private func makeLabel(_ text: String) -> NSTextField {
@@ -218,7 +304,7 @@ final class SettingsWindow: NSWindowController, NSWindowDelegate {
 
     @objc private func resetShortcut() {
         HotkeyManager.shared.resetToDefault()
-        shortcutLabel.stringValue = "Cmd + Shift + R"
+        shortcutLabel.stringValue = "Cmd + Shift + E"
         shortcutLabel.textColor = .labelColor
     }
 
