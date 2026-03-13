@@ -54,7 +54,9 @@ No app switching. No copy-pasting. Just select, press, done.
 - Swift + AppKit
 - Claude API (Haiku)
 - [HotKey](https://github.com/soffes/HotKey) for global shortcuts
-- Zero other dependencies## License
+- Zero other dependencies
+
+## License
 
 [MIT](LICENSE)
 
